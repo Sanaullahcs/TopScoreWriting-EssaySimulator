@@ -1,0 +1,268 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.topButtonHolder {
+  display: flex;
+  justify-content: end;
+  padding: 10px 0px;
+  position: relative;
+}
+.logoImg {
+  position: absolute;
+  left: 5px;
+  top: 0px;
+}
+.uploadButton {
+  /* position: absolute; */
+  /* right: 5px; */
+}
+.appHolder {
+  margin: 20px;
+}
+.mb-20px {
+  margin-bottom: 4% !important;
+}
+.uploadButton {
+  font-family: Poppins !important;
+
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  line-height: 22.5px !important;
+  text-align: center !important;
+  background-color: #50b5ff !important;
+  border-radius: 10px !important;
+  max-height: 100px;
+  border: 0 !important;
+  text-transform: capitalize !important;
+  color: white !important;
+  padding: 11px 16px !important;
+}
+.MuiPaper-rounded {
+  border-radius: 15px !important;
+}
+.paratxt {
+  font-family: Poppins;
+  font-size: 16px;
+  font-weight: 600;
+  /* line-height: 30px; */
+  text-align: left;
+  margin-top: 23px;
+}
+.paraHolder {
+  display: flex;
+  align-items: center;
+}
+.paratxt2 {
+  font-family: Roboto;
+  font-size: 12px;
+  margin-top: -10px;
+  font-weight: 400;
+  /* line-height: 16.41px; */
+  text-align: left;
+}
+
+.cardHolder {
+  /* border: 1px solid #f1f1f5; */
+}
+.newDownloadBtn {
+  font-family: Poppins;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22.5px;
+  background-color: #f1f1f5;
+  color: #555555;
+  text-align: center;
+  border: 0;
+  border-radius: 9px;
+  padding: 0px 11px;
+}
+
+.downloadImg {
+  margin-bottom: -3px;
+  margin-right: 5px;
+}
+/* .cardController {
+  max-height: 455px;
+  min-height: 455px;
+  overflow: scroll;
+} */
+.overflow-hidden {
+  overflow: hidden;
+}
+/* body {
+  max-height: 100vh;
+  background: red;
+} */
+.cardController {
+  min-height: 76vh;
+  max-height: 400px;
+  overflow-y: scroll; /* Enables vertical scrolling */
+  border: 1px solid #f1f1f1;
+  /* background-color: red; */
+  border-radius: 22px;
+}
+.cardHolder2 {
+  min-height: 70vh;
+  border: 1px solid #f1f1f1;
+  /* background-color: red !important; */
+  border-radius: 22px;
+  position: relative;
+}
+@media (min-height: 600px) and (max-height: 700px) {
+  .cardHolder2 {
+    min-height: 79vh;
+  }
+  .cardController {
+    min-height: 84vh;
+  }
+  .quill {
+    height: 380px !important;
+  }
+  .mb-20px {
+    margin-bottom: 0px !important;
+  }
+}
+@media (min-height: 700px) and (max-height: 800px) {
+  .cardHolder2 {
+    min-height: 80vh;
+  }
+  .cardController {
+    min-height: 84.6vh;
+  }
+  .quill {
+    height: 480px !important;
+  }
+  .mb-20px {
+    margin-bottom: 0px !important;
+  }
+}
+@media (min-height: 800px) and (max-height: 900px) {
+  .cardHolder2 {
+    min-height: 80.5vh;
+  }
+  .cardController {
+    min-height: 84.6vh;
+  }
+  .quill {
+    height: 550px !important;
+  }
+  .mb-20px {
+    margin-bottom: 0px !important;
+  }
+}
+@media (min-height: 900px) and (max-height: 1500px) {
+  .cardHolder2 {
+    min-height: 85.5vh;
+  }
+  .cardController {
+    min-height: 88.6vh;
+  }
+  .quill {
+    height: 550px !important;
+  }
+  .mb-20px {
+    margin-bottom: 0px !important;
+  }
+}
+@media (max-width: 1199px) {
+  .cardHolder2 {
+    margin-left: 0px !important;
+  }
+  .cardController {
+    min-height: 425px;
+  }
+  .cardHolder2 {
+    min-height: 425px;
+  }
+}
+.btnwrapper {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.mx-auto {
+  text-align: center;
+}
+.ql-editor {
+  font-size: 13px;
+  text-transform: none;
+  text-decoration: none;
+  font-family: "Poppins";
+  font-weight: 500;
+}
+.ql-container {
+  border-radius: 0px 0px 10px 10px;
+}
+.ql-toolbar {
+  display: flex;
+  border-radius: 10px 10px 0px 0px;
+}
+.ql-formats {
+  display: flex !important;
+  margin: 0 !important;
+}
+.marginTop {
+  margin-top: 13px;
+  margin-right: 6px;
+  width: 45px;
+}
+.pdfColor {
+  color: #ec0f02;
+  font-weight: 500;
+}
+.wordColor {
+  color: #2a5699;
+  font-weight: 500;
+}
+/* Custom scrollbar for Firefox */
+
+/* Custom scrollbar for WebKit browsers */
+::-webkit-scrollbar {
+  width: 6px !important; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1 !important; /* Color of the scrollbar thumb */
+  border-radius: 10px !important; /* Rounded scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1 !important; /* Color of the scrollbar track */
+}
