@@ -24,8 +24,7 @@ import html2pdf from "html2pdf.js";
 import * as pdfjsLib from "pdfjs-dist";
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
-const CLIENT_ID =
-  "";
+const CLIENT_ID = "";
 const API_KEY = "";
 const SCOPES = "";
 
@@ -54,49 +53,105 @@ const FileUploadEssay = () => {
   }, []);
 
   const handleGoogleDriveUpload = async () => {
-    const authInstance = gapi.auth2.getAuthInstance();
-
-    // Ensure user is signed in
-    if (!authInstance.isSignedIn.get()) {
-      await authInstance.signIn();
-    }
-
-    const accessToken = gapi.auth.getToken().access_token;
-
-    // Convert the essayText to a Blob (replace `essayText` with your actual text content)
-    const blob = new Blob([essayText], { type: "text/plain" });
-
-    // Form data for uploading the file
-    const metadata = {
-      name: "essay.txt", // Filename at Google Drive
-      mimeType: "text/plain", // MIME type of the file
-    };
-
-    const form = new FormData();
-    form.append(
-      "metadata",
-      new Blob([JSON.stringify(metadata)], { type: "application/json" })
-    );
-    form.append("file", blob);
-
-    // Upload to Google Drive
-    fetch(
-      "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
-      {
-        method: "POST",
-        headers: new Headers({ Authorization: `Bearer ${accessToken}` }),
-        body: form,
+    try {
+      const authInstance = gapi.auth2.getAuthInstance();
+  
+      // Ensure the user is signed in
+      if (!authInstance.isSignedIn.get()) {
+        await authInstance.signIn();
       }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        alert("File uploaded to Google Drive!");
-        console.log("Uploaded file:", data);
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
+  
+      const accessToken = authInstance.currentUser.get().getAuthResponse().access_token;
+  
+      // Convert the essayText to a Word document using docx library
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(essayText, "text/html");
+  
+      const paragraphs = [];
+      doc.body.childNodes.forEach((node) => {
+        const textRuns = [];
+  
+        node.childNodes.forEach((childNode) => {
+          if (childNode.nodeType === 3) {
+            textRuns.push(new TextRun({ text: childNode.textContent, font: "Arial", size: 24 }));
+          } else if (childNode.nodeType === 1) {
+            let run = new TextRun({ text: childNode.textContent, font: "Arial", size: 24 });
+  
+            if (childNode.tagName === "STRONG" || childNode.tagName === "B") {
+              run = new TextRun({ text: childNode.textContent, bold: true, font: "Arial", size: 24 });
+            } else if (childNode.tagName === "EM" || childNode.tagName === "I") {
+              run = new TextRun({ text: childNode.textContent, italics: true, font: "Arial", size: 24 });
+            } else if (childNode.tagName === "U") {
+              run = new TextRun({ text: childNode.textContent, underline: {}, font: "Arial", size: 24 });
+            }
+  
+            if (childNode.tagName === "H1") {
+              run = new TextRun({ text: childNode.textContent, bold: true, size: 48, font: "Arial" });
+              paragraphs.push(new Paragraph({ children: [run], heading: HeadingLevel.HEADING_1 }));
+            } else if (childNode.tagName === "H2") {
+              run = new TextRun({ text: childNode.textContent, bold: true, size: 36, font: "Arial" });
+              paragraphs.push(new Paragraph({ children: [run], heading: HeadingLevel.HEADING_2 }));
+            } else if (childNode.tagName === "H3") {
+              run = new TextRun({ text: childNode.textContent, bold: true, size: 32, font: "Arial" });
+              paragraphs.push(new Paragraph({ children: [run], heading: HeadingLevel.HEADING_3 }));
+            } else {
+              textRuns.push(run);
+            }
+          }
+        });
+  
+        if (textRuns.length > 0) {
+          paragraphs.push(new Paragraph({ children: textRuns }));
+        }
       });
+  
+      const docxDocument = new Document({
+        sections: [
+          {
+            properties: {},
+            children: paragraphs,
+          },
+        ],
+      });
+  
+      // Convert to a blob
+      const blob = await Packer.toBlob(docxDocument);
+  
+      // Create a unique filename using a timestamp
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const uniqueFilename = `essay-${timestamp}.docx`;
+  
+      // Form data for uploading the Word document
+      const metadata = {
+        name: uniqueFilename, // Unique filename at Google Drive
+        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      };
+  
+      const form = new FormData();
+      form.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
+      form.append("file", blob);
+  
+      // Upload the Word document to Google Drive
+      fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+        method: "POST",
+        headers: new Headers({
+          Authorization: `Bearer ${accessToken}`,
+        }),
+        body: form,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          alert("Word document uploaded to Google Drive as " + uniqueFilename);
+          console.log("Uploaded file:", data);
+        })
+        .catch((error) => {
+          console.error("Error uploading Word document:", error);
+        });
+    } catch (error) {
+      console.error("Google Drive authentication error:", error);
+    }
   };
+  
 
   const handleMenuOpen = (event) => {
     setMenuAnchor(event.currentTarget);
@@ -112,8 +167,8 @@ const FileUploadEssay = () => {
     if (file && file.name.endsWith(".pdf")) {
       const pdfUrl = URL.createObjectURL(file); // Create a blob URL for the PDF
       setFileContent(
-        `<iframe src="${pdfUrl}" width="100%" height="600px"></iframe>`
-      ); // Embed the PDF in an iframe
+        `<iframe src="${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="600px"></iframe>` // Embed the PDF without toolbar
+      );
     } else if (file && file.name.endsWith(".docx")) {
       // Handle DOCX files (same as before)
       const reader = new FileReader();
